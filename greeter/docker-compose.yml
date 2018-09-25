@@ -1,0 +1,16 @@
+
+version: '3'
+services:
+    server:
+        build: ./server
+        ports:
+            - "8080:8080"
+
+
+    client:
+        build: ./client
+        depends_on:
+            - server
+        command: sh -c 'wait-for server:8080 -- catalina.sh run'
+        environment:
+            NAME: 'Kenobi'
