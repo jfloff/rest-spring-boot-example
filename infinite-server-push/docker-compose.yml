@@ -1,0 +1,12 @@
+
+version: '3'
+services:
+    server:
+        build: ./server
+        environment:
+            - SERVER_OF=client
+
+    client:
+        build: ./client
+        environment:
+            - CLIENT_OF=server
