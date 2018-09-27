@@ -47,7 +47,7 @@ public class Client {
     @RequestMapping("/push")
     @ResponseStatus(value = HttpStatus.OK)
     public void push(@RequestParam(value="payload") String payload) {
-        LOGGER.info("Received PUSH from Server: " + payload);
+        // LOGGER.info("Received PUSH from Server: " + payload);
         return;
     }
 
@@ -61,7 +61,7 @@ public class Client {
         // even better a eureka/zookeeper service discovery system
         try {
             String reply = restTemplate.getForObject(uri, String.class);
-            LOGGER.info("Server reply: " + reply);
+            // LOGGER.info("Server reply: " + reply);
             return;
         } catch (RestClientException rce) {
             LOGGER.info("EXCEPTION on WRITE: " + rce.getMessage());

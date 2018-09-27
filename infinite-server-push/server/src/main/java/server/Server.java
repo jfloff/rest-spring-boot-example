@@ -35,7 +35,7 @@ public class Server {
     @RequestMapping("/write")
     public String write(@RequestParam(value="payload") String payload) {
         try {
-            LOGGER.info("Received from client: " + payload);
+            // LOGGER.info("Received from client: " + payload);
             return payload;
         } finally {
             Thread t = new Thread(() -> this.pushToClient());
@@ -52,9 +52,9 @@ public class Server {
         // even better a eureka/zookeeper service discovery system
         while(true){
             try {
-                LOGGER.info("Pushing to client ...");
+                // LOGGER.info("Pushing to client ...");
                 this.restTemplate.getForObject(uri, Void.class);
-                LOGGER.info("Pushed!");
+                // LOGGER.info("Pushed!");
                 return;
             } catch (RestClientException rce) {
                 LOGGER.info("EXCEPTION on PUSH: " + rce.getMessage());
