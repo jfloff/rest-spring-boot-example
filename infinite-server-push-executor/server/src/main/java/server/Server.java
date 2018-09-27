@@ -38,7 +38,7 @@ public class Server {
     @RequestMapping("/write")
     public String write(@RequestParam(value="payload") String payload) {
         LOGGER.info("Received from client: " + payload);
-        executor.execute(() -> this.pushToClient());
+        // executor.execute(() -> this.pushToClient());
         return payload;
     }
 
