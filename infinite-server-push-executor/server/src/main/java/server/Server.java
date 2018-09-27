@@ -2,6 +2,8 @@ package server;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,10 +38,11 @@ public class Server {
 
 
     @RequestMapping("/write")
-    public String write(@RequestParam(value="payload") String payload) {
+    @ResponseStatus(value = HttpStatus.OK)
+    public void write(@RequestParam(value="payload") String payload) {
         LOGGER.info("Received from client: " + payload);
         // executor.execute(() -> this.pushToClient());
-        return payload;
+        return;
     }
 
     public void pushToClient() {

@@ -27,6 +27,8 @@ import org.springframework.web.client.RestClientException;
 public class Client {
     private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
 
+    private static final int CLIENT_THREADS = Integer.parseInt(System.getenv("CLIENT_THREADS") == null ? "1" : System.getenv("CLIENT_THREADS"));
+
     private static final String serverUrl = "http://" + System.getenv("CLIENT_OF") + ":8080/server/write";
     private static final String messageUri = UriComponentsBuilder.fromHttpUrl(serverUrl)
                                                           .queryParam("payload", "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
@@ -37,11 +39,13 @@ public class Client {
 
     @EventListener(ApplicationReadyEvent.class)
     public void run() {
-        new Thread(() -> {
-            while(true) {
-                write();
-            }
-        }).start();
+        for (int i = 0; i <= CLIENT_THREADS; i++) {
+            new Thread(() -> {
+                while(true) {
+                    write();
+                }
+            }).start();
+        }
     }
 
     @RequestMapping("/push")
@@ -56,8 +60,8 @@ public class Client {
         // this should be either replaced by a health-checking or
         // even better a eureka/zookeeper service discovery system
         try {
-            String reply = restTemplate.getForObject(messageUri, String.class);
-            LOGGER.info("Server reply: " + reply);
+            restTemplate.getForObject(messageUri, Void.class);
+            LOGGER.info("Server ACK!");
             return;
         } catch (RestClientException rce) {
             LOGGER.info("EXCEPTION on WRITE: " + rce.getMessage());

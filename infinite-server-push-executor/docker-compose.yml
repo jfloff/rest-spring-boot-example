@@ -5,9 +5,10 @@ services:
         build: ./server
         environment:
             - SERVER_OF=client
-            - THREAD_POOL_SIZE=2
+            - THREAD_FACTOR=2
 
     client:
         build: ./client
         environment:
             - CLIENT_OF=server
+            - CLIENT_THREADS=2
