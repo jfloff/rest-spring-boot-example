@@ -28,9 +28,9 @@ public class Client {
     private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
 
     private static final String serverUrl = "http://" + System.getenv("CLIENT_OF") + ":8080/server/write";
-    private final AtomicLong counter = new AtomicLong();
-    @Autowired
-    private String fixedLengthMessage;
+    private static final String messageUri = UriComponentsBuilder.fromHttpUrl(serverUrl)
+                                                          .queryParam("payload", "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
+                                                          .build().encode().toUriString();
     @Autowired
     private RestTemplate restTemplate;
 
@@ -52,15 +52,11 @@ public class Client {
     }
 
     public void write() {
-        String uri = UriComponentsBuilder.fromHttpUrl(serverUrl)
-                                      .queryParam("payload", String.format("[%d] %s", counter.incrementAndGet(), this.fixedLengthMessage))
-                                      .build().encode().toUriString();
-
         // server might not be ready so we just log the exception and continue
         // this should be either replaced by a health-checking or
         // even better a eureka/zookeeper service discovery system
         try {
-            String reply = restTemplate.getForObject(uri, String.class);
+            String reply = restTemplate.getForObject(messageUri, String.class);
             LOGGER.info("Server reply: " + reply);
             return;
         } catch (RestClientException rce) {

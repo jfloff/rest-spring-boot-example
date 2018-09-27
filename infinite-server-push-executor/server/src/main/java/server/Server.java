@@ -27,9 +27,10 @@ public class Server {
     private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
     private static final String clientUrl = "http://" + System.getenv("SERVER_OF") + ":8080/client/push";
-    private final AtomicLong counter = new AtomicLong();
-    @Autowired
-    private String fixedLengthMessage;
+    private static final String messageUri = UriComponentsBuilder.fromHttpUrl(clientUrl)
+                                                          .queryParam("payload", "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+                                                          .build().encode().toUriString();
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -42,16 +43,12 @@ public class Server {
     }
 
     public void pushToClient() {
-        String uri = UriComponentsBuilder.fromHttpUrl(clientUrl)
-                                      .queryParam("payload", String.format("[%d] %s", counter.incrementAndGet(), this.fixedLengthMessage))
-                                      .build().encode().toUriString();
-
         // this should be either replaced by a health-checking or
         // even better a eureka/zookeeper service discovery system
         while(true){
             try {
                 LOGGER.info("Pushing to client ...");
-                this.restTemplate.getForObject(uri, Void.class);
+                this.restTemplate.getForObject(messageUri, Void.class);
                 LOGGER.info("Pushed!");
                 return;
             } catch (RestClientException rce) {
