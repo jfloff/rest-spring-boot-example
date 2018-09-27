@@ -1,0 +1,13 @@
+
+version: '3'
+services:
+    server:
+        build: ./server
+        environment:
+            - SERVER_OF=client
+            - THREAD_POOL_SIZE=2
+
+    client:
+        build: ./client
+        environment:
+            - CLIENT_OF=server
