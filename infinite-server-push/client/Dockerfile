@@ -5,6 +5,7 @@ LABEL maintainer="jfloff@inesc-id.pt"
 ###################
 # Build Client
 #
+ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
 WORKDIR /home/client
 # cache gradle build dependencies - is less often changed than code
 ADD build.gradle /home/client
