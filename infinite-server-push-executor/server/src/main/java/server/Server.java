@@ -28,11 +28,6 @@ public class Server {
     private static final int THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors() * Integer.parseInt(System.getenv("THREAD_FACTOR") == null ? "1" : System.getenv("THREAD_FACTOR"));
     private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
-    private static final String clientUrl = "http://" + System.getenv("SERVER_OF") + ":8080/client/push";
-    private static final String messageUri = UriComponentsBuilder.fromHttpUrl(clientUrl)
-                                                          .queryParam("payload", "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
-                                                          .build().encode().toUriString();
-
     @Autowired
     private RestTemplate restTemplate;
 
@@ -41,11 +36,16 @@ public class Server {
     @ResponseStatus(value = HttpStatus.OK)
     public void write(@RequestParam(value="payload") String payload) {
         LOGGER.info("Received from client: " + payload);
-        // executor.execute(() -> this.pushToClient());
+        final String clientIp = payload.split("%7", 2)[0];
+        executor.execute(() -> this.pushToClient(clientIp));
         return;
     }
 
-    public void pushToClient() {
+    public void pushToClient(final String clientIp) {
+        String messageUri = UriComponentsBuilder.fromHttpUrl("http://" + clientIp + ":8080/client/push")
+                                                .queryParam("payload", "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+                                                .build().encode().toUriString();
+
         // this should be either replaced by a health-checking or
         // even better a eureka/zookeeper service discovery system
         while(true){

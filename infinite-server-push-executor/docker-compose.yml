@@ -4,11 +4,25 @@ services:
     server:
         build: ./server
         environment:
-            - SERVER_OF=client
             - THREAD_FACTOR=2
 
-    client:
+    client1:
         build: ./client
         environment:
+            - MY_IP=client1
+            - CLIENT_OF=server
+            - CLIENT_THREADS=2
+
+    client2:
+        build: ./client
+        environment:
+            - MY_IP=client2
+            - CLIENT_OF=server
+            - CLIENT_THREADS=2
+
+    client3:
+        build: ./client
+        environment:
+            - MY_IP=client3
             - CLIENT_OF=server
             - CLIENT_THREADS=2
