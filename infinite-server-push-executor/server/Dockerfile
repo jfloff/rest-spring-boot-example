@@ -17,4 +17,5 @@ RUN gradle build && \
 
 # For debugging JVM
 EXPOSE 8849
-ENV CATALINA_OPTS="-Xmx12G -Xms10G -XX:+UseG1GC -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8849 -Dcom.sun.management.jmxremote.rmi.port=8849 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost"
+# Size of GC set for ns-standard-4
+ENV CATALINA_OPTS="-Xms14600M -Xmx14800M -XX:+UseG1GC -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8849 -Dcom.sun.management.jmxremote.rmi.port=8849 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost"
