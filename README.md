@@ -7,12 +7,24 @@ Collection of working examples of REST-based applications running on top of [Spr
 ## Run
 Running examples is very easy: just go into one of the examples subfolders, and **run `docker-compose up`**! That's it!
 
+#### Running in a cloud-based environment
+If you are running this on a cloud-base service, such as GCP, you might find this commands useful. For launching the server or the client: `docker run --network=host --rm -e "ENV_VAR=2" <image tag>`. Pull the image from a publicly available register (e.g. Docker Hub, or Google Container Registry).
+
+If you want to to some debugging within the cloud, consider:
+- Running the container in detach mode by adding a `-d`
+- Install tools like `nload` to inspect network traffic and `htop` to inspect memory and CPU performance
+
 
 ## Examples
 * **`greeter`**: client sends a name for the server, and the server replies with a greeting. Client name is passed as an env variable in the `docker-compose.yml`.
     * You can also test this with accessing the url `http://localhost:8080/server/greeting?name=Kenobi`
 
 * **`infinite-pingpong`**: an infinite ping-pong between *two* REST services. This emulates the microservice ecosystem where services are both clients and servers at the same time.
+
+* **`infinite-server-push`**: its like `infinite-pingpong` but in this example the server pushes the changes to the client. Hence the client has to keep a open endpoint for the server to write changes to.
+
+* **`infinite-server-push-executor`**: its like `infidinte-server-push` but in this example the server has a threadpool for managing connections from client and pushing to the client.
+
 
 ## Requirements
 
